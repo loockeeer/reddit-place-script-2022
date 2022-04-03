@@ -8,13 +8,21 @@
             "password": "password",
             "client_id": "clientid",
             "client_secret": "clientsecret",
-            "start_coords": [0, 0]
+            "start_coords": [0, 0],
+            "proxies": {
+                "http": "",
+                "https": ""
+            }
         },
         "worker2username": {
             "password": "password",
             "client_id": "clientid",
             "client_secret": "clientsecret",
-            "start_coords": [0, 0]
+            "start_coords": [0, 0],
+            "proxies": {
+                "http": "",
+                "https": ""
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import itertools
 import os
 import os.path
 import math
@@ -104,7 +104,7 @@ class PlaceClient:
     def load_image(self):
         # Read and load the image to draw and get its dimensions
         try:
-            im = Image.open(self.image_path)
+            im = Image.open(self.image_path).convert("RGBA")
         except FileNotFoundError:
             logger.fatal("Failed to load image")
             exit()
@@ -118,7 +118,7 @@ class PlaceClient:
     # Draw a pixel at an x, y coordinate in r/place with a specific color
 
     def set_pixel_and_check_ratelimit(
-        self, access_token_in, x, y, color_index_in=18, canvas_index=0
+        self, access_token_in, x, y, worker, color_index_in=18, canvas_index=0
     ):
         logger.info(
             "Attempting to place {} pixel at {}, {}",
@@ -153,7 +153,7 @@ class PlaceClient:
             "Content-Type": "application/json",
         }
 
-        response = requests.request("POST", url, headers=headers, data=payload)
+        response = requests.request("POST", url, headers=headers, data=payload, proxies=None if not hasattr(worker, "proxies") else worker["proxies"])
         logger.debug("Received response: {}", response.text)
 
         # There are 2 different JSON keys for responses to get the next timestamp.
@@ -507,8 +507,9 @@ class PlaceClient:
                         self.access_tokens[index],
                         pixel_x_start,
                         pixel_y_start,
+                        worker,
                         pixel_color_index,
-                        canvas,
+                        canvas
                     )
 
                     current_r += 1
