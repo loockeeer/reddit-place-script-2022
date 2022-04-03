@@ -48,10 +48,11 @@ class PlaceClient:
                 if "proxies" in self.json_data
                 else None
             )
-        except:
+        except Exception as e:
             logger.error(
                 "Failed setting options from json. Please read README and check if you have everything in correctly. If issues are still happening then create a issue"
             )
+            print(e)
             exit()
 
         # Color palette
@@ -87,7 +88,7 @@ class PlaceClient:
     def GetProxies(self, proxies):
         proxieslist = []
         for i in proxies:
-            proxieslist[len(proxieslist)] = {"https": i}
+            proxieslist.append({"https": i})
         return proxieslist
 
     def GetRandomProxy(self):
@@ -130,7 +131,7 @@ class PlaceClient:
     def load_image(self):
         # Read and load the image to draw and get its dimensions
         try:
-            im = Image.open(self.image_path)
+            im = Image.open(self.image_path).convert("RGBA")
         except FileNotFoundError:
             logger.fatal("Failed to load image")
             exit()
